@@ -4,6 +4,11 @@ RW ISA VM examples
 Example imlementations Virtual Machines (VMs) for the "RW" Instruction Set
 Architecture.
 
+These VMs can be used to run the example executables from
+http://rolfwr.net/rwisa/rwisa-exe.zip
+
+Companion presentation slides at http://rolfwr.net/tarpit/
+
 The RW instuction set can be summarized as:
 
 | Opcode           | Description    | C-like implementation              |
@@ -68,5 +73,3 @@ distinct opcodes.
 | 05 dstptr srcptr | Move Byte      | mem[dstptr] = mem[srcptr]                                          |
 | 06 jmpptr srcptr | Branch If Zero | if (mem[srcptr] == 0) pc = jmpptr                                  |
 | 07 dstptr srcptr | Add Pointers   | writeptr(mem, dstptr) = readptr(mem, dstptr) + readptr(mem.srcptr) |
-
-Companion presentation slides at http://rolfwr.net/tarpit/
