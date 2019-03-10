@@ -57,6 +57,16 @@ The following ISA revisions have been defined:
 | ---- | -------------------------------------------------- |
 | 1    | Executable image without header, opcodes 0–4 used. |
 | 2    | Executable image with header, opcodes 0–4 used.    |
+| 3    | Executable image with header, opcodes 0–7 used.    |
 
+The instructions of opcodes 5–7 defined by revision 3 can be synthesized
+using existing instructions, but allow for faster execution when used as
+distinct opcodes.
 
+| Opcode           | Description    | C-like implementation                                              |
+| ---------------- | -------------- | ------------------------------------------------------------------ |
+| 05 dstptr srcptr | Move Byte      | mem[dstptr] = mem[srcptr]                                          |
+| 06 jmpptr srcptr | Branch If Zero | if (mem[srcptr] == 0) pc = jmpptr                                  |
+| 07 dstptr srcptr | Add Pointers   | writeptr(mem, dstptr) = readptr(mem, dstptr) + readptr(mem.srcptr) |
 
+Companion presentation slides at http://rolfwr.net/tarpit/
