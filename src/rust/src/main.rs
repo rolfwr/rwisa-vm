@@ -13,6 +13,17 @@ enum Instruction {
     InByte(i32),
 }
 
+#[derive(Debug)]
+struct UnknownInstruction(u8);
+
+impl fmt::Display for UnknownInstruction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Unknown instruction, {}", self.0)
+    }
+}
+
+impl Error for UnknownInstruction {}
+
 impl fmt::Display for Instruction {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use Instruction::*;
@@ -51,7 +62,7 @@ impl Machine {
         ptr
     }
 
-    fn next_instruction(&mut self) -> Result<Instruction, String> {
+    fn next_instruction(&mut self) -> Result<Instruction, UnknownInstruction> {
         let inst = self.mem[self.pc as usize];
         self.pc += 1;
 
@@ -62,16 +73,18 @@ impl Machine {
             2 => Ok(BranchIfPlus(self.fetch_pointer(), self.fetch_pointer())),
             3 => Ok(Subtract(self.fetch_pointer(), self.fetch_pointer())),
             4 => Ok(InByte(self.fetch_pointer())),
-            _ => Err(format!("Unknown instruction {}", inst)),
+            _ => Err(UnknownInstruction(inst)),
         }
     }
 
     fn disassemble(&mut self) -> Result<(), Box<Error>> {
         while (self.pc as usize) < self.mem.len() {
             let inst_pc = self.pc;
-            // Just ignore everything that is not a valid instruction
-            if let Ok(inst) = self.next_instruction() {
-                println!("{}    {}", inst_pc, inst);
+            match self.next_instruction() {
+                Ok(instr) => println!("{}    {}", inst_pc, instr),
+                Err(UnknownInstruction(instr)) => {
+                    println!("{}    {} ({:?})", inst_pc, instr, instr as char)
+                }
             }
         }
         Ok(())
