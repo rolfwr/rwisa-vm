@@ -80,7 +80,6 @@ impl Machine {
     fn disassemble(&mut self) -> Result<(), Box<Error>> {
         while (self.pc as usize) < self.mem.len() {
             let inst_pc = self.pc;
-            // Just ignore everything that is not a valid instruction
             match self.next_instruction() {
                 Ok(instr) => println!("{}    {}", inst_pc, instr),
                 Err(UnknownInstruction(instr)) => {
